@@ -6,6 +6,8 @@ var app = {
   	var $friends = $('<div class="friends></div>');
   	$friends.html('Friend List');
   	$('.main').append($friends);
+
+  	$('#send .submit').on('submit', app.handleSubmit);
   },
   send: function(message) {
     $.ajax({
@@ -55,9 +57,22 @@ var app = {
   },
 
   addFriend: function($username) {
-  	console.log($username);
   	var $friendList = $('.friends');
   	var $newFriend = $('<div class="friend"></div>');
+
+  },
+
+  handleSubmit: function() {
+  	var message = $('#message').val();
+  	var username = 'orlandoc'
+  	var room = 'test1'
+
+  	var messageObj = {
+  		username: username,
+  		text: message,
+  		roomname: room
+  	};
+  	app.send(messageObj);
 
   }
 };
