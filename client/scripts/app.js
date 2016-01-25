@@ -3,9 +3,32 @@
 var app = {
   server: 'https://api.parse.com/1/classes/chatterbox',
   init: function() { 
+  	console.log("init called");
+  	var $main = $('.main');
+
+  	var $spinnerDiv = $('<div class="spinner"></div>');
+  	var $spinnerImg = $('<img src="client/images/spiffygif_46x46.gif">');
+  	$spinnerDiv.append($spinnerImg);
+  	$main.append($spinnerDiv);
+
+  	var $roomDiv = $('<div id="rooms"></div>');
+  	$roomDiv.html("Room: ");
+  	var $roomSelect = $('<select id="roomSelect"></select>');
+  	$roomDiv.append($roomSelect);
+  	$main.append($roomDiv);
+
   	var $friends = $('<div class="friends></div>');
   	$friends.html('Friend List');
-  	$('.main').append($friends);
+  	$main.append($friends);
+
+  	var $form = $('<form action="#" id="send" method="post"></form>');
+  	var $formMessage = $('<input type="text" name="message" id="message" />');
+  	var $formSubmit = $('<input type="submit" name="submit" class="submit" />');
+  	$form.append($formMessage).append($formSubmit);
+  	$main.append($form);
+
+  	var $chats = $('<div id="chats"></div>');
+  	$main.append($chats);
 
   	$('#send .submit').on('submit', app.handleSubmit);
   },
