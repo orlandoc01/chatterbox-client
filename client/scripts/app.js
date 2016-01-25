@@ -1,34 +1,40 @@
 // YOUR CODE HERE:
+var exampleMessage = {
+  username: 'orlandoc',
+  text: 'Test Message',
+  roomname: 'lobby'
+};
 
 var app = {
   server: 'https://api.parse.com/1/classes/chatterbox',
+  messages: [],
   init: function() { 
   	console.log("init called");
-  	var $main = $('.main');
+  	// var $main = $('#main');
 
-  	var $spinnerDiv = $('<div class="spinner"></div>');
-  	// var $spinnerImg = $('<img src="client/images/spiffygif_46x46.gif">');
-  	// $spinnerDiv.append($spinnerImg);
-  	$main.append($spinnerDiv);
+  	// var $spinnerDiv = $('<div class="spinner"></div>');
+  	// // var $spinnerImg = $('<img src="client/images/spiffygif_46x46.gif">');
+  	// // $spinnerDiv.append($spinnerImg);
+  	// $main.append($spinnerDiv);
 
-  	var $roomDiv = $('<div id="rooms"></div>');
-  	$roomDiv.html("Room: ");
-  	var $roomSelect = $('<select id="roomSelect"></select>');
-  	$roomDiv.append($roomSelect);
-  	$main.append($roomDiv);
+  	// var $roomDiv = $('<div id="rooms"></div>');
+  	// $roomDiv.html("Room: ");
+  	// var $roomSelect = $('<select id="roomSelect"></select>');
+  	// $roomDiv.append($roomSelect);
+  	// $main.append($roomDiv);
 
-  	var $friends = $('<div class="friends></div>');
-  	$friends.html('Friend List');
-  	$main.append($friends);
+  	// var $friends = $('<div class="friends></div>');
+  	// $friends.html('Friend List');
+  	// $main.append($friends);
 
-  	var $form = $('<form action="#" id="send" method="post"></form>');
-  	var $formMessage = $('<input type="text" name="message" id="message" />');
-  	var $formSubmit = $('<input type="submit" name="submit" class="submit" />');
-  	$form.append($formMessage).append($formSubmit);
-  	$main.append($form);
+  	// var $form = $('<form action="#" id="send" method="post"></form>');
+  	// var $formMessage = $('<input type="text" name="message" id="message" />');
+  	// var $formSubmit = $('<input type="submit" name="submit" class="submit" />');
+  	// $form.append($formMessage).append($formSubmit);
+  	// $main.append($form);
 
-  	var $chats = $('<div id="chats"></div>');
-  	$main.append($chats);
+  	// var $chats = $('<div id="chats"></div>');
+  	// $main.append($chats);
 
   	$('#send .submit').on('submit', app.handleSubmit);
   },
@@ -47,15 +53,24 @@ var app = {
     });
   },
   fetch: function() {
-  	$.ajax(this.server, {
+  	var context = this;
+  	//console.log("Fetch has been called to " + context.server);
+  	
+  	var result1 = $.ajax('https://api.parse.com/1/classes/chatterbox', {
       sucess: function(data) {
       	console.log("Message received was " + data);
       	return data;
       },
       error: function(data) {
       	console.error("Failure: message not received");
-      }	
+      },
+      complete: function(data) {
+      	return data;
+      }
     });
+
+  	//console.log(result1);
+    //context.messages = result1.responseJSON.results;
   },
   clearMessages: function() {
   	$('#chats').empty();
@@ -97,6 +112,12 @@ var app = {
   	};
   	app.send(messageObj);
 
+  },
+  refresh: function() {
+  	this.fetch();
+  	this.messages.forEach( function(message) {
+  		app.addMessage(message);
+  	});
   }
 };
 
