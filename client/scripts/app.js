@@ -33,7 +33,7 @@ var app = {
   	$('#chats').empty();
   },
   addMessage: function(message) {
-  	var $message = $('<div class="message"></div');
+  	var $message = $('<div class="message"></div>');
   	var $username = $('<span class="username"></span>');
   	$username.html(message.username)
   	var $messageContent = $('<span class="content"></span>');
@@ -41,7 +41,11 @@ var app = {
   	$message.append($username).append($messageContent);
 
   	$('#chats').prepend($message);
-
+  },
+  addRoom: function(room) {
+  	var $room = $('<div class="room"</div>');
+  	$room.html(room)
+  	$('#roomSelect').prepend($room);
 
   }
 };
