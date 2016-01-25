@@ -46,7 +46,10 @@ var app = {
   	var $room = $('<div class="room"</div>');
   	$room.html(room)
   	$('#roomSelect').prepend($room);
+  },
 
+  addFriend: function() {
+  	
   }
 };
 
