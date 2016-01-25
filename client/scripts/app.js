@@ -28,6 +28,21 @@ var app = {
       	console.error("Failure: message not received");
       }	
     });
+  },
+  clearMessages: function() {
+  	$('#chats').empty();
+  },
+  addMessage: function(message) {
+  	var $message = $('<div class="message"></div');
+  	var $username = $('<span class="username"></span>');
+  	$username.html(message.username)
+  	var $messageContent = $('<span class="content"></span>');
+  	$messageContent.html(message.text);
+  	$message.append($username).append($messageContent);
+
+  	$('#chats').prepend($message);
+
+
   }
 };
 
