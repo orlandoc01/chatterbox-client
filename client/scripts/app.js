@@ -40,44 +40,57 @@ var app = {
   },
   send: function(message) {
     $.ajax({
-      url: this.server,
+      url: 'https://api.parse.com/1/classes/chatterbox',
       type: 'POST',
       data: JSON.stringify(message),
       contentType: 'application/JSON',
-      sucess: function(data) {
-        console.log("Message sent to chatterbox")
+      success: function(data) {
+        console.log("Message sent to chatterbox");
       },
       error: function(data) {
-        console.error("Failure: Message not sent.")
+        console.error("Failure: Message not sent.");
       }
     });
+
+    //app.fetch();
+
+   
   },
+
+
   fetch: function() {
   	var context = this;
   	//console.log("Fetch has been called to " + context.server);
   	
-  	var result1 = $.ajax('https://api.parse.com/1/classes/chatterbox', {
-      sucess: function(data) {
-      	console.log("Message received was " + data);
-      	return data;
+  	$.ajax('https://api.parse.com/1/classes/chatterbox', {
+      success: function(data) {
+      	context.messages = data.results;
+        console.log(context.messages);
+        data.results.forEach( function(messageObj) {
+          if(messageObj['username'] === 'orlandoc') {
+            console.log(messageObj);
+          }
+        });
+        data.results.forEach( function(messageObj) {
+          app.addMessage(messageObj);
+        });
       },
       error: function(data) {
       	console.error("Failure: message not received");
-      },
-      complete: function(data) {
-      	return data;
       }
     });
-
   	//console.log(result1);
     //context.messages = result1.responseJSON.results;
+    //console.log(context.messages);
   },
+
+
   clearMessages: function() {
   	$('#chats').empty();
   },
   addMessage: function(message) {
   	var $message = $('<div class="message"></div>');
-  	var $username = $('<span class="username"></span>');
+  	var $username = $('<a class="username"></a>');
   	$username.html(message.username);
   	$username.on('click', function() {
   		app.addFriend($(this));
@@ -90,7 +103,7 @@ var app = {
   },
   addRoom: function(room) {
   	var $room = $('<div class="room"</div>');
-  	$room.html(room)
+  	$room.html(room);
   	$('#roomSelect').prepend($room);
   },
 
@@ -102,8 +115,8 @@ var app = {
 
   handleSubmit: function() {
   	var message = $('#message').val();
-  	var username = 'orlandoc'
-  	var room = 'test1'
+  	var username = 'orlandoc';
+  	var room = 'test1';
 
   	var messageObj = {
   		username: username,
@@ -112,12 +125,6 @@ var app = {
   	};
   	app.send(messageObj);
 
-  },
-  refresh: function() {
-  	this.fetch();
-  	this.messages.forEach( function(message) {
-  		app.addMessage(message);
-  	});
   }
 };
 
