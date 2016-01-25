@@ -7,8 +7,8 @@ var app = {
   	var $main = $('.main');
 
   	var $spinnerDiv = $('<div class="spinner"></div>');
-  	var $spinnerImg = $('<img src="client/images/spiffygif_46x46.gif">');
-  	$spinnerDiv.append($spinnerImg);
+  	// var $spinnerImg = $('<img src="client/images/spiffygif_46x46.gif">');
+  	// $spinnerDiv.append($spinnerImg);
   	$main.append($spinnerDiv);
 
   	var $roomDiv = $('<div id="rooms"></div>');
