@@ -3,6 +3,9 @@
 var app = {
   server: 'https://api.parse.com/1/classes/chatterbox',
   init: function() { 
+  	var $friends = $('<div class="friends></div>');
+  	$friends.html('Friend List');
+  	$('.main').append($friends);
   },
   send: function(message) {
     $.ajax({
@@ -35,7 +38,10 @@ var app = {
   addMessage: function(message) {
   	var $message = $('<div class="message"></div>');
   	var $username = $('<span class="username"></span>');
-  	$username.html(message.username)
+  	$username.html(message.username);
+  	$username.on('click', function() {
+  		app.addFriend($(this));
+  	});
   	var $messageContent = $('<span class="content"></span>');
   	$messageContent.html(message.text);
   	$message.append($username).append($messageContent);
@@ -48,8 +54,11 @@ var app = {
   	$('#roomSelect').prepend($room);
   },
 
-  addFriend: function() {
-  	
+  addFriend: function($username) {
+  	console.log($username);
+  	var $friendList = $('.friends');
+  	var $newFriend = $('<div class="friend"></div>');
+
   }
 };
 
