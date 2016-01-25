@@ -1,6 +1,8 @@
 // YOUR CODE HERE:
 
-var app = {};
+var app = {
+	server: 'https://api.parse.com/1/classes/chatterbox'
+};
 
 app.init = function() {
 
@@ -8,7 +10,7 @@ app.init = function() {
 
 app.send = function(message) {
 	$.ajax({
-		 url: 'https://api.parse.com/1/classes/chatterbox',
+		 url: this.server,
 		 type: 'POST',
 		 data: JSON.stringify(message),
 		 contentType: 'application/JSON',
@@ -20,4 +22,17 @@ app.send = function(message) {
 		 }
 	});
 
+}
+
+app.fetch = function() {
+	$.ajax(this.server, {
+		sucess: function(data) {
+			console.log("Message received was " + data);
+			return data;
+		},
+		error: function(data) {
+			console.error("Failure: message not received");
+		}
+		
+	});
 }
