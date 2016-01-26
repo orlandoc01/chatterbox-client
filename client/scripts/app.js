@@ -20,6 +20,25 @@ var app = {
       $('#message').val("");
     });
     $('.refresh').on('click', app.fetch);
+
+    $('.newRoom').hide();
+    $('#roomSelect').change(function() {
+      if($(this).val() === "Create New Room...") {
+        $('.newRoom').slideDown();
+      }
+      else {
+        $('.newRoom').hide();
+      }
+    });
+
+    $('.newRoom > button').on('click', function() {
+      var newRoom = $('.newRoom > input').val();
+      app.addRoom(newRoom);
+      $('.newRoom').slideUp();
+      $('#roomSelect').val(newRoom);
+
+    });
+
   },
 
   send: function(message) {
