@@ -1,4 +1,12 @@
 // YOUR CODE HERE:
+
+var example = {
+  username: "anonymous",
+  text: "testing123 testing123",
+  roomname: "lobby",
+  likes: ['orlando']
+
+};
 var app = {
   server: 'https://api.parse.com/1/classes/chatterbox',
   messages: [],
@@ -181,7 +189,9 @@ var app = {
       else return char1;
     });
     return finalStr.join("");
-  }
+  },
+
+
 };
 
  

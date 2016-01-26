@@ -96,15 +96,27 @@ a.handle.selected {
     font-weight: bold;
 }
 div.friend {
-    display: inline-block;
-    margin: 5px;
-    padding: 10px;
+    display: block;
 }
 
-div.message, div.friend > a {
+div.message {
     margin: 5px;
     border: 1px solid gray;
     background: #E8E8E8;
     padding: 10px;
     border-radius: 5px;
 }
+
+
+$.ajax({
+      url: app.server + "&where%5BobjectId%5D=FziSTQQykS",
+      type: 'PUT',
+      data: {dislikes: ['orlando']},
+      contentType: 'application/JSON',
+      success: function(data) {
+        console.log("Message sent to chatterbox");
+      },
+      error: function(data) {
+        console.error("Failure: Message not sent.");
+      }
+    });  
