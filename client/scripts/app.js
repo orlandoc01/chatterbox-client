@@ -76,15 +76,21 @@ var app = {
         app.data = data;
       	app.messages = data.results;
         data.results.forEach( function(messageObj) {
-          app.addMessage(messageObj);
           var roomname = app.escape(messageObj.roomname);
           if(roomname !== undefined && !(roomname in app.rooms)) {
             app.rooms[roomname] = roomname;
             app.addRoom(roomname);
           }
         });
+        d3.select('#chats').selectAll('.message')
+          .data(app.messages, function(d) {
+            return d.text;
+          })
+          .enter()
+          .insert(function(message) {
+            return app.createMessage(message);
+          });
 
-        app.updateRooms();
       },
       error: function(data) {
       	console.error("Failure: message not received");
@@ -96,7 +102,7 @@ var app = {
   	$('#chats').empty();
   },
 
-  addMessage: function(message) {
+  createMessage: function(message) {
   	var $message = $('<p class="message"></p>');
   	var $username = $('<span class="username"></span>');
   	$username.html('Created by <a href="#" class="handle">' + app.escape(message.username)
@@ -107,7 +113,7 @@ var app = {
   	var $messageContent = $('<span class="content"></span>');
   	$messageContent.html(app.escape(message.text));
   	$message.append($username).append($messageContent);
-  	$('#chats').prepend($message);
+    return $message[0];
   },
 
   addRoom: function(room) {
@@ -154,6 +160,7 @@ var app = {
       else if(char1 === '"') return "&quot";
       else if(char1 === "'") return "&#x27";
       else if(char1 === "/") return "&$x2F";
+      else if(char1 === "") return '""';
       else return char1;
     });
     return finalStr.join("");
