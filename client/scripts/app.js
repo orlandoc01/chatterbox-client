@@ -72,7 +72,6 @@ var app = {
     var roomOption = $('#roomSelect').val();
     var completeURL = app.server + "?order=-createdAt";
     if(roomOption !== "All" && roomOption !== "Create New Room...") completeURL = completeURL + "&where%5Broomname%5D=" + roomOption;
-    app.clearMessages();
   	$.ajax({
       url: completeURL,
       type: "GET",
@@ -87,11 +86,12 @@ var app = {
             app.addRoom(roomname);
           }
         });
-        d3.select('#chats').selectAll('.message')
+        var messagesD3 = d3.select('#chats').selectAll('.message')
           .data(app.messages, function(d) {
             return d.objectId;
-          })
-          .enter()
+          });
+
+          messagesD3.enter()
           .append(function(message) {
             return app.createMessage(message);
           })
@@ -101,6 +101,12 @@ var app = {
           .duration(1000)
           .attr("top", 0)
           .style("opacity", 1);
+
+          messagesD3.exit()
+          .transition('linear')
+          .duration(1000)
+          .style("opacity", 1e-6)
+          .remove();
 
       },
       error: function(data) {
@@ -155,8 +161,9 @@ var app = {
 
 
       });
-
+      $newFriend.hide();
       $friendList.append($newFriend);
+      $newFriend.slideDown(400, 'swing');
     }
   },
 
