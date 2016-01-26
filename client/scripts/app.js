@@ -76,13 +76,27 @@ var app = {
         app.data = data;
       	app.messages = data.results;
         data.results.forEach( function(messageObj) {
-          app.addMessage(messageObj);
           var roomname = app.escape(messageObj.roomname);
           if(roomname !== undefined && !(roomname in app.rooms)) {
             app.rooms[roomname] = roomname;
             app.addRoom(roomname);
           }
         });
+        d3.select('#chats').selectAll('.message')
+          .data(app.messages, function(d) {
+            return d.objectId;
+          })
+          .enter()
+          .append(function(message) {
+            return app.createMessage(message);
+          })
+          .attr("dy", ".35em")
+          .attr("y", -60)
+          .style("fill-opacity", 1e-6)
+          .transition()
+          .duration(750)
+          .attr("y", 0)
+          .style("fill-opacity", 1);
 
       },
       error: function(data) {
@@ -95,7 +109,7 @@ var app = {
   	$('#chats').empty();
   },
 
-  addMessage: function(message) {
+  createMessage: function(message) {
   	var $message = $('<p class="message"></p>');
   	var $username = $('<span class="username"></span>');
   	$username.html('Created by <a href="#" class="handle">' + app.escape(message.username)
@@ -106,7 +120,7 @@ var app = {
   	var $messageContent = $('<span class="content"></span>');
   	$messageContent.html(app.escape(message.text));
   	$message.append($username).append($messageContent);
-  	$('#chats').prepend($message);
+    return $message[0];
   },
 
   addRoom: function(room) {
@@ -123,7 +137,19 @@ var app = {
     var regexHandle = new RegExp('<a href="#" class="handle">(.*)</a>');
     var searchString = initialString.match(regexHandle);
     $newFriend.html('<a href="#">' + searchString[1] + '</a>');
+    $newFriend.on('click', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      $(this).toggleClass('selected');
+      $('a.handle').each( function(index, element) {
+        if($(element).html() == searchString[1]) {
+          $(element).toggleClass('selected');
+        }
+        //jObj.css('font-weight', 'Bold');
+      });
 
+
+    });
 
     $friendList.append($newFriend);
 
@@ -153,6 +179,7 @@ var app = {
       else if(char1 === '"') return "&quot";
       else if(char1 === "'") return "&#x27";
       else if(char1 === "/") return "&$x2F";
+      else if(char1 === "") return '""';
       else return char1;
     });
     return finalStr.join("");
