@@ -83,6 +83,7 @@ var app = {
 
   fetch: function() {
   	//console.log("Fetch has been called to " + context.server);
+    app.clearMessages();
   	$.ajax({
       url: "https://api.parse.com/1/classes/chatterbox",
       type: "GET",
@@ -106,6 +107,8 @@ var app = {
       	console.error("Failure: message not received");
       }
     });
+
+    //setTimeout(app,fetch, 1000);
   	//console.log(result1);
     //context.messages = result1.responseJSON.results;
     //console.log(context.messages);
@@ -160,6 +163,7 @@ var app = {
   },
   escape: function(str) {
     if(str === undefined) return "undefined";
+    if(str === null) return "null";
     str = str.split("");
     var finalStr = str.map( function(char1) {
       if( char1 === "&") return "&amp";
