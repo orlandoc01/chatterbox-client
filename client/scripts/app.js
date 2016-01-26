@@ -11,33 +11,8 @@ var app = {
   messages: [],
   updatedMessages: [],
   rooms: {},
+
   init: function() { 
-  	console.log("init called");
-  	// var $main = $('#main');
-
-  	// var $spinnerDiv = $('<div class="spinner"></div>');
-  	// // var $spinnerImg = $('<img src="client/images/spiffygif_46x46.gif">');
-  	// // $spinnerDiv.append($spinnerImg);
-  	// $main.append($spinnerDiv);
-
-  	// var $roomDiv = $('<div id="rooms"></div>');
-  	// $roomDiv.html("Room: ");
-  	// var $roomSelect = $('<select id="roomSelect"></select>');
-  	// $roomDiv.append($roomSelect);
-  	// $main.append($roomDiv);
-
-  	// var $friends = $('<div class="friends></div>');
-  	// $friends.html('Friend List');
-  	// $main.append($friends);
-
-  	// var $form = $('<form action="#" id="send" method="post"></form>');
-  	// var $formMessage = $('<input type="text" name="message" id="message" />');
-  	// var $formSubmit = $('<input type="submit" name="submit" class="submit" />');
-  	// $form.append($formMessage).append($formSubmit);
-  	// $main.append($form);
-
-  	// var $chats = $('<div id="chats"></div>');
-  	// $main.append($chats);
   	$('#send').on('submit', function(event) {
       event.preventDefault();
       event.stopPropagation();
@@ -46,6 +21,7 @@ var app = {
     });
     $('.refresh').on('click', app.fetch);
   },
+
   send: function(message) {
     $.ajax({
       url: 'https://api.parse.com/1/classes/chatterbox',
@@ -60,26 +36,6 @@ var app = {
       }
     });   
   },
-
-  // update: function() {
-  //   console.log("Update called");
-  //   $.ajax({
-  //     url: 'https://api.parse.com/1/classes/chatterbox',
-  //     type: 'PUT',
-  //     data: '{"results":{"__op":"AddUnique", "objects":'
-  //       + JSON.stringify(data.results) + '}}',
-  //     contentType: 'application/JSON',
-  //     sucess: function(data) {
-  //       console.log("Messages were updatd");
-  //       app.updatedMessages = data.results;
-
-  //     },
-  //     error: function(data) {
-  //       console.error("Failure: messages weren't updated");
-  //     }
-  //   });
-  // },
-
 
   fetch: function() {
   	//console.log("Fetch has been called to " + context.server);
@@ -107,33 +63,23 @@ var app = {
       	console.error("Failure: message not received");
       }
     });
-
-    //setTimeout(app,fetch, 1000);
-  	//console.log(result1);
-    //context.messages = result1.responseJSON.results;
-    //console.log(context.messages);
   },
-
 
   clearMessages: function() {
   	$('#chats').empty();
   },
+
   addMessage: function(message) {
   	var $message = $('<p class="message"></p>');
   	var $username = $('<a class="username"></a>');
   	$username.html("Created by " + app.escape(message.username)
-                  + " in " + app.escape(message.roomname) + ": ");
+      + " in " + app.escape(message.roomname) + ": ");
   	$username.on('click', function() {
   		app.addFriend($(this));
   	});
   	var $messageContent = $('<span class="content"></span>');
   	$messageContent.html(app.escape(message.text));
   	$message.append($username).append($messageContent);
-
-    // var $roomName = $('<p class="roomMessage"></p>');
-    // $roomName.html(app.escape(message.roomname));
-    // $messageContent.append($roomName);
-
   	$('#chats').prepend($message);
   },
   addRoom: function(room) {
