@@ -7,9 +7,7 @@ var exampleMessage = {
 
 var app = {
   server: 'https://api.parse.com/1/classes/chatterbox',
-  data: {},
   messages: [],
-  updatedMessages: [],
   rooms: {},
 
   init: function() { 
@@ -74,7 +72,7 @@ var app = {
 
   send: function(message) {
     $.ajax({
-      url: 'https://api.parse.com/1/classes/chatterbox',
+      url: app.server,
       type: 'POST',
       data: JSON.stringify(message),
       contentType: 'application/JSON',
@@ -89,10 +87,9 @@ var app = {
 
   fetch: function(roomSelector) {
     var matcher = new RegExp(".*");
-  	//console.log("Fetch has been called to " + context.server);
     app.clearMessages();
   	$.ajax({
-      url: "https://api.parse.com/1/classes/chatterbox",
+      url: app.server,
       type: "GET",
       data: {order: '-createdAt'},
       contentType: 'application/JSON',
@@ -134,6 +131,7 @@ var app = {
   	$message.append($username).append($messageContent);
   	$('#chats').prepend($message);
   },
+  
   addRoom: function(room) {
   	var $room = $('<option class="room"></option>');
   	$room.html(room);
