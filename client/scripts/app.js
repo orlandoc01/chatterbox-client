@@ -35,8 +35,9 @@ var app = {
 
   	// var $chats = $('<div id="chats"></div>');
   	// $main.append($chats);
-
+    app.addRoom("4Chan");
   	$('#send .submit').on('submit', app.handleSubmit);
+    $('.refresh').on('click', app.fetch);
   },
   send: function(message) {
     $.ajax({
@@ -107,9 +108,9 @@ var app = {
   	$('#chats').prepend($message);
   },
   addRoom: function(room) {
-  	var $room = $('<div class="room"></div>');
+  	var $room = $('<option class="room"></option>');
   	$room.html(room);
-  	$('#roomSelect').prepend($room);
+  	$('#roomSelect').append($room);
   },
 
   addFriend: function($username) {
