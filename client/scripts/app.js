@@ -21,21 +21,15 @@ var app = {
       app.handleSubmit();
       $('#message').val("");
     });
-    $('.refresh').on('click', app.fetch);
-
-    
 
     $('.newRoom').hide();
     $('#roomSelect').change(function() {
       if($(this).val() === "Create New Room...") {
         $('.newRoom').slideDown();
-      } else if($(this).val() === "All") {
-        app.fetch();
       }
       else {
         $('.newRoom').hide();
         app.clearMessages();
-        app.fetch();
 
 
       }
@@ -49,7 +43,7 @@ var app = {
 
     });
 
-    
+    app.fetch();
 
   },
 
@@ -68,7 +62,7 @@ var app = {
     });   
   },
 
-  fetch: function(userName) {
+  fetch: function() {
     var roomOption = $('#roomSelect').val();
     var completeURL = app.server + "?order=-createdAt";
     if(roomOption !== "All" && roomOption !== "Create New Room...") completeURL = completeURL + "&where%5Broomname%5D=" + roomOption;
@@ -92,9 +86,9 @@ var app = {
           });
 
           messagesD3.enter()
-          .append(function(message) {
+          .insert(function(message) {
             return app.createMessage(message);
-          })
+          }, ":first-child")
           .attr("top", -60)
           .style("opacity", 1e-6)
           .transition('linear')
@@ -107,6 +101,8 @@ var app = {
           .duration(1000)
           .style("opacity", 1e-6)
           .remove();
+
+          setTimeout(app.fetch, 1000);
 
       },
       error: function(data) {
