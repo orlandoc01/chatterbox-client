@@ -87,9 +87,16 @@ var app = {
             return d.objectId;
           })
           .enter()
-          .insert(function(message) {
+          .append(function(message) {
             return app.createMessage(message);
-          });
+          })
+          .attr("dy", ".35em")
+          .attr("y", -60)
+          .style("fill-opacity", 1e-6)
+          .transition()
+          .duration(750)
+          .attr("y", 0)
+          .style("fill-opacity", 1);
 
       },
       error: function(data) {
@@ -130,7 +137,19 @@ var app = {
     var regexHandle = new RegExp('<a href="#" class="handle">(.*)</a>');
     var searchString = initialString.match(regexHandle);
     $newFriend.html('<a href="#">' + searchString[1] + '</a>');
+    $newFriend.on('click', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      $(this).toggleClass('selected');
+      $('a.handle').each( function(index, element) {
+        if($(element).html() == searchString[1]) {
+          $(element).toggleClass('selected');
+        }
+        //jObj.css('font-weight', 'Bold');
+      });
 
+
+    });
 
     $friendList.append($newFriend);
 
