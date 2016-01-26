@@ -1,10 +1,4 @@
 // YOUR CODE HERE:
-var exampleMessage = {
-  username: 'orlandoc',
-  text: 'Test Message',
-  roomname: 'lobby'
-};
-
 var app = {
   server: 'https://api.parse.com/1/classes/chatterbox',
   messages: [],
@@ -84,14 +78,13 @@ var app = {
         data.results.forEach( function(messageObj) {
           app.addMessage(messageObj);
           var roomname = app.escape(messageObj.roomname);
-          if(roomname) {
+          if(roomname !== undefined && !(roomname in app.rooms)) {
             app.rooms[roomname] = roomname;
+            app.addRoom(roomname);
           }
         });
 
-        _.each(app.rooms, function(key, value) {
-          app.addRoom(key);
-        });
+        app.updateRooms();
       },
       error: function(data) {
       	console.error("Failure: message not received");
