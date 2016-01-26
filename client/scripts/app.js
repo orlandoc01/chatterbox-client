@@ -7,6 +7,7 @@ var exampleMessage = {
 
 var app = {
   server: 'https://api.parse.com/1/classes/chatterbox',
+  data: {},
   messages: [],
   updatedMessages: [],
   rooms: {},
@@ -37,7 +38,7 @@ var app = {
 
   	// var $chats = $('<div id="chats"></div>');
   	// $main.append($chats);
-  	$('#send').on('submit', function(event) {
+  	$('#send .submit').on('submit', function(event) {
       event.preventDefault();
       event.stopPropagation();
       app.handleSubmit();
@@ -65,7 +66,8 @@ var app = {
     $.ajax({
       url: 'https://api.parse.com/1/classes/chatterbox',
       type: 'PUT',
-      data: JSON.stringify(message),
+      data: '{"results":{"__op":"AddUnique", "objects":'
+        + JSON.stringify(app.data.results) + '}}',
       contentType: 'application/JSON',
       sucess: function(data) {
         console.log("Messages were updatd");
@@ -85,6 +87,7 @@ var app = {
       url: "https://api.parse.com/1/classes/chatterbox",
       type: "GET",
       success: function(data) {
+        app.data = data;
       	app.messages = data.results;
         data.results.forEach( function(messageObj) {
           app.addMessage(messageObj);
