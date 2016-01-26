@@ -91,7 +91,8 @@ var app = {
   addMessage: function(message) {
   	var $message = $('<p class="message"></p>');
   	var $username = $('<a class="username"></a>');
-  	$username.html("Created by " + app.escape(message.username) + ":");
+  	$username.html("Created by " + app.escape(message.username)
+                  + " in " + app.escape(message.roomname) + ": ");
   	$username.on('click', function() {
   		app.addFriend($(this));
   	});
@@ -99,10 +100,14 @@ var app = {
   	$messageContent.html(app.escape(message.text));
   	$message.append($username).append($messageContent);
 
+    // var $roomName = $('<p class="roomMessage"></p>');
+    // $roomName.html(app.escape(message.roomname));
+    // $messageContent.append($roomName);
+
   	$('#chats').prepend($message);
   },
   addRoom: function(room) {
-  	var $room = $('<div class="room"</div>');
+  	var $room = $('<div class="room"></div>');
   	$room.html(room);
   	$('#roomSelect').prepend($room);
   },

@@ -18,6 +18,7 @@ body {
 #chats {
     height: 600px;
     border: 1px solid black;
+    overflow: scroll;
 }
 
 #main h1 {
