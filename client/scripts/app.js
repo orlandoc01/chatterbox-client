@@ -9,6 +9,7 @@ var app = {
   server: 'https://api.parse.com/1/classes/chatterbox',
   messages: [],
   rooms: {},
+  processID: null,
 
   init: function() { 
   	$('#send').on('submit', function(event) {
@@ -25,30 +26,13 @@ var app = {
     $('#roomSelect').change(function() {
       if($(this).val() === "Create New Room...") {
         $('.newRoom').slideDown();
+      } else if($(this).val() === "All") {
+        app.fetch();
       }
       else {
         $('.newRoom').hide();
         app.clearMessages();
-        $.ajax({
-          url: "https://api.parse.com/1/classes/chatterbox",
-          type: "GET",
-          data: {order: '-createdAt', where: {roomname: $(this).val()}},
-          contentType: 'application/JSON',
-          success: function(data) {
-            app.data = data;
-            app.messages = data.results;
-            data.results.forEach( function(messageObj) {
-              app.addMessage(messageObj);
-              var roomname = app.escape(messageObj.roomname);
-              if(roomname) {
-                app.rooms[roomname] = roomname;
-              }
-            });
-          },
-          error: function(data) {
-            console.error("Failure: message not received");
-          }
-        });
+        app.fetch();
 
 
       }
@@ -85,13 +69,15 @@ var app = {
     });   
   },
 
-  fetch: function(roomSelector) {
-    var matcher = new RegExp(".*");
+  fetch: function(userName) {
+    var roomOption = $('#roomSelect').val();
+    var completeURL = app.server + "?order=-createdAt";
+    if(roomOption !== "All" && roomOption !== "Create New Room...") completeURL = completeURL + "&where%5Broomname%5D=" + roomOption;
+    console.log(completeURL);
     app.clearMessages();
   	$.ajax({
-      url: app.server,
+      url: completeURL,
       type: "GET",
-      data: {order: '-createdAt'},
       contentType: 'application/JSON',
       success: function(data) {
         app.data = data;
@@ -131,7 +117,7 @@ var app = {
   	$message.append($username).append($messageContent);
   	$('#chats').prepend($message);
   },
-  
+
   addRoom: function(room) {
   	var $room = $('<option class="room"></option>');
   	$room.html(room);
