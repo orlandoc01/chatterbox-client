@@ -84,7 +84,6 @@ var app = {
           }
         });
 
-        app.updateRooms();
       },
       error: function(data) {
       	console.error("Failure: message not received");
