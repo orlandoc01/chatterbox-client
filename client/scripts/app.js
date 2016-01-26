@@ -21,6 +21,8 @@ var app = {
     });
     $('.refresh').on('click', app.fetch);
 
+    
+
     $('.newRoom').hide();
     $('#roomSelect').change(function() {
       if($(this).val() === "Create New Room...") {
@@ -60,6 +62,12 @@ var app = {
       $('.newRoom').slideUp();
       $('#roomSelect').val(newRoom);
 
+    });
+
+    $('a.username > a').on('click', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      app.addFriend($(this));
     });
 
   },
@@ -115,9 +123,9 @@ var app = {
 
   addMessage: function(message) {
   	var $message = $('<p class="message"></p>');
-  	var $username = $('<a class="username"></a>');
-  	$username.html("Created by " + app.escape(message.username)
-      + " in " + app.escape(message.roomname) + ": ");
+  	var $username = $('<span class="username"></span>');
+  	$username.html('Created by <a href="#" class="handle">' + app.escape(message.username)
+      + "</a> in " + app.escape(message.roomname) + ": ");
   	$username.on('click', function() {
   		app.addFriend($(this));
   	});
@@ -135,6 +143,8 @@ var app = {
   addFriend: function($username) {
   	var $friendList = $('.friends');
   	var $newFriend = $('<div class="friend"></div>');
+    $newFriend.html($username.html());
+    $friendList.append($newFriend);
 
   },
 
