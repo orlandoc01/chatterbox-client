@@ -8,6 +8,7 @@ var exampleMessage = {
 var app = {
   server: 'https://api.parse.com/1/classes/chatterbox',
   messages: [],
+  updatedMessages: [],
   rooms: {},
   init: function() { 
   	console.log("init called");
@@ -36,7 +37,6 @@ var app = {
 
   	// var $chats = $('<div id="chats"></div>');
   	// $main.append($chats);
-    app.addRoom("4Chan");
   	$('#send').on('submit', function(event) {
       event.preventDefault();
       event.stopPropagation();
@@ -60,14 +60,32 @@ var app = {
     });   
   },
 
+  update: function() {
+    console.log("Update called");
+    $.ajax({
+      url: 'https://api.parse.com/1/classes/chatterbox',
+      type: 'PUT',
+      data: JSON.stringify(message),
+      contentType: 'application/JSON',
+      sucess: function(data) {
+        console.log("Messages were updatd");
+        app.updatedMessages = data.results;
+
+      },
+      error: function(data) {
+        console.error("Failure: messages weren't updated");
+      }
+    });
+  },
+
 
   fetch: function() {
-  	var context = this;
   	//console.log("Fetch has been called to " + context.server);
-  	
-  	$.ajax('https://api.parse.com/1/classes/chatterbox', {
+  	$.ajax({
+      url: "https://api.parse.com/1/classes/chatterbox",
+      type: "GET",
       success: function(data) {
-      	context.messages = data.results;
+      	app.messages = data.results;
         data.results.forEach( function(messageObj) {
           app.addMessage(messageObj);
           var roomname = app.escape(messageObj.roomname);
