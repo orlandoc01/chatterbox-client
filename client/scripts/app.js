@@ -95,13 +95,12 @@ var app = {
           .append(function(message) {
             return app.createMessage(message);
           })
-          .attr("dy", ".35em")
           .attr("top", -60)
-          .style("fill-opacity", 1e-6)
+          .style("opacity", 1e-6)
           .transition('linear')
-          .duration(7500)
+          .duration(1000)
           .attr("top", 0)
-          .style("fill-opacity", 1);
+          .style("opacity", 1);
 
       },
       error: function(data) {
