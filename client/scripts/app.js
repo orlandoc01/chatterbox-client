@@ -28,6 +28,29 @@ var app = {
       }
       else {
         $('.newRoom').hide();
+        app.clearMessages();
+        $.ajax({
+          url: "https://api.parse.com/1/classes/chatterbox",
+          type: "GET",
+          data: {order: '-createdAt', where: {roomname: $(this).val()}},
+          contentType: 'application/JSON',
+          success: function(data) {
+            app.data = data;
+            app.messages = data.results;
+            data.results.forEach( function(messageObj) {
+              app.addMessage(messageObj);
+              var roomname = app.escape(messageObj.roomname);
+              if(roomname) {
+                app.rooms[roomname] = roomname;
+              }
+            });
+          },
+          error: function(data) {
+            console.error("Failure: message not received");
+          }
+        });
+
+
       }
     });
 
@@ -56,13 +79,15 @@ var app = {
     });   
   },
 
-  fetch: function() {
+  fetch: function(roomSelector) {
+    var matcher = new RegExp(".*");
   	//console.log("Fetch has been called to " + context.server);
     app.clearMessages();
   	$.ajax({
       url: "https://api.parse.com/1/classes/chatterbox",
       type: "GET",
-      data: {order: "-createdAt"},
+      data: {order: '-createdAt'},
+      contentType: 'application/JSON',
       success: function(data) {
         app.data = data;
       	app.messages = data.results;
