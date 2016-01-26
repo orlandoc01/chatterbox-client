@@ -8,6 +8,7 @@ var exampleMessage = {
 var app = {
   server: 'https://api.parse.com/1/classes/chatterbox',
   messages: [],
+  rooms: {},
   init: function() { 
   	console.log("init called");
   	// var $main = $('#main');
@@ -36,7 +37,12 @@ var app = {
   	// var $chats = $('<div id="chats"></div>');
   	// $main.append($chats);
     app.addRoom("4Chan");
-  	$('#send .submit').on('submit', app.handleSubmit);
+  	$('#send').on('submit', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      app.handleSubmit();
+      $('#message').val("");
+    });
     $('.refresh').on('click', app.fetch);
   },
   send: function(message) {
@@ -51,11 +57,7 @@ var app = {
       error: function(data) {
         console.error("Failure: Message not sent.");
       }
-    });
-
-    //app.fetch();
-
-   
+    });   
   },
 
 
@@ -66,14 +68,16 @@ var app = {
   	$.ajax('https://api.parse.com/1/classes/chatterbox', {
       success: function(data) {
       	context.messages = data.results;
-        console.log(context.messages);
-        data.results.forEach( function(messageObj) {
-          if(messageObj['username'] === 'orlandoc') {
-            console.log(messageObj);
-          }
-        });
         data.results.forEach( function(messageObj) {
           app.addMessage(messageObj);
+          var roomname = app.escape(messageObj.roomname);
+          if(roomname) {
+            app.rooms[roomname] = roomname;
+          }
+        });
+
+        _.each(app.rooms, function(key, value) {
+          app.addRoom(key);
         });
       },
       error: function(data) {
@@ -121,8 +125,8 @@ var app = {
 
   handleSubmit: function() {
   	var message = $('#message').val();
-  	var username = 'orlandoc';
-  	var room = 'test1';
+  	var username = 'Orlando';
+  	var room = $('#roomSelect').val();
 
   	var messageObj = {
   		username: username,
