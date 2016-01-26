@@ -89,14 +89,14 @@ var app = {
   	$('#chats').empty();
   },
   addMessage: function(message) {
-  	var $message = $('<div class="message"></div>');
+  	var $message = $('<p class="message"></p>');
   	var $username = $('<a class="username"></a>');
-  	$username.html(message.username);
+  	$username.html("Created by " + app.escape(message.username) + ":");
   	$username.on('click', function() {
   		app.addFriend($(this));
   	});
   	var $messageContent = $('<span class="content"></span>');
-  	$messageContent.html(message.text);
+  	$messageContent.html(app.escape(message.text));
   	$message.append($username).append($messageContent);
 
   	$('#chats').prepend($message);
@@ -125,6 +125,20 @@ var app = {
   	};
   	app.send(messageObj);
 
+  },
+  escape: function(str) {
+    if(str === undefined) return "undefined";
+    str = str.split("");
+    var finalStr = str.map( function(char1) {
+      if( char1 === "&") return "&amp";
+      else if(char1 === "<") return "&lt";
+      else if(char1 === ">") return "&gt";
+      else if(char1 === '"') return "&quot";
+      else if(char1 === "'") return "&#x27";
+      else if(char1 === "/") return "&$x2F";
+      else return char1;
+    });
+    return finalStr.join("");
   }
 };
 
