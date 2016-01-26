@@ -38,7 +38,7 @@ var app = {
 
   	// var $chats = $('<div id="chats"></div>');
   	// $main.append($chats);
-  	$('#send .submit').on('submit', function(event) {
+  	$('#send').on('submit', function(event) {
       event.preventDefault();
       event.stopPropagation();
       app.handleSubmit();
@@ -61,24 +61,24 @@ var app = {
     });   
   },
 
-  update: function() {
-    console.log("Update called");
-    $.ajax({
-      url: 'https://api.parse.com/1/classes/chatterbox',
-      type: 'PUT',
-      data: '{"results":{"__op":"AddUnique", "objects":'
-        + JSON.stringify(app.data.results) + '}}',
-      contentType: 'application/JSON',
-      sucess: function(data) {
-        console.log("Messages were updatd");
-        app.updatedMessages = data.results;
+  // update: function() {
+  //   console.log("Update called");
+  //   $.ajax({
+  //     url: 'https://api.parse.com/1/classes/chatterbox',
+  //     type: 'PUT',
+  //     data: '{"results":{"__op":"AddUnique", "objects":'
+  //       + JSON.stringify(data.results) + '}}',
+  //     contentType: 'application/JSON',
+  //     sucess: function(data) {
+  //       console.log("Messages were updatd");
+  //       app.updatedMessages = data.results;
 
-      },
-      error: function(data) {
-        console.error("Failure: messages weren't updated");
-      }
-    });
-  },
+  //     },
+  //     error: function(data) {
+  //       console.error("Failure: messages weren't updated");
+  //     }
+  //   });
+  // },
 
 
   fetch: function() {
@@ -86,6 +86,7 @@ var app = {
   	$.ajax({
       url: "https://api.parse.com/1/classes/chatterbox",
       type: "GET",
+      data: {order: "-createdAt"},
       success: function(data) {
         app.data = data;
       	app.messages = data.results;
