@@ -73,7 +73,6 @@ var app = {
     var roomOption = $('#roomSelect').val();
     var completeURL = app.server + "?order=-createdAt";
     if(roomOption !== "All" && roomOption !== "Create New Room...") completeURL = completeURL + "&where%5Broomname%5D=" + roomOption;
-    console.log(completeURL);
     app.clearMessages();
   	$.ajax({
       url: completeURL,
