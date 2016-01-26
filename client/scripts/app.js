@@ -3,6 +3,7 @@ var app = {
   server: 'https://api.parse.com/1/classes/chatterbox',
   messages: [],
   rooms: {},
+  friends: {},
   processID: null,
 
   init: function() { 
@@ -40,11 +41,7 @@ var app = {
 
     });
 
-    $('a.handle').on('click', function(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      app.addFriend($(this));
-    });
+    
 
   },
 
@@ -91,11 +88,11 @@ var app = {
             return app.createMessage(message);
           })
           .attr("dy", ".35em")
-          .attr("y", -60)
+          .attr("top", -60)
           .style("fill-opacity", 1e-6)
-          .transition()
-          .duration(750)
-          .attr("y", 0)
+          .transition('linear')
+          .duration(7500)
+          .attr("top", 0)
           .style("fill-opacity", 1);
 
       },
@@ -110,7 +107,7 @@ var app = {
   },
 
   createMessage: function(message) {
-  	var $message = $('<p class="message"></p>');
+  	var $message = $('<div class="message"></div>');
   	var $username = $('<span class="username"></span>');
   	$username.html('Created by <a href="#" class="handle">' + app.escape(message.username)
       + "</a> in " + app.escape(message.roomname) + ": ");
@@ -130,29 +127,30 @@ var app = {
   },
 
   addFriend: function($username) {
-  	var $friendList = $('.friends');
-  	var $newFriend = $('<div class="friend"></div>');
-
     var initialString = $username.html();
     var regexHandle = new RegExp('<a href="#" class="handle">(.*)</a>');
     var searchString = initialString.match(regexHandle);
-    $newFriend.html('<a href="#">' + searchString[1] + '</a>');
-    $newFriend.on('click', function(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      $(this).toggleClass('selected');
-      $('a.handle').each( function(index, element) {
-        if($(element).html() == searchString[1]) {
-          $(element).toggleClass('selected');
-        }
-        //jObj.css('font-weight', 'Bold');
+    if(!(searchString[1] in app.friends)) {
+
+      var $friendList = $('.friends');
+      var $newFriend = $('<div class="friend"></div>');
+      $newFriend.html('<a href="#">' + searchString[1] + '</a>');
+      app.friends[searchString[1]] = searchString[1];
+      $newFriend.on('click', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        $(this).toggleClass('selected');
+        $('a.handle').each( function(index, element) {
+          if($(element).html() == searchString[1]) {
+            $(element).toggleClass('selected');
+          }
+        });
+
+
       });
 
-
-    });
-
-    $friendList.append($newFriend);
-
+      $friendList.append($newFriend);
+    }
   },
 
   handleSubmit: function() {

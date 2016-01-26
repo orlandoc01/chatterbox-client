@@ -95,3 +95,16 @@ a.handle.selected {
 .friend.selected {
     font-weight: bold;
 }
+div.friend {
+    display: inline-block;
+    margin: 5px;
+    padding: 10px;
+}
+
+div.message, div.friend > a {
+    margin: 5px;
+    border: 1px solid gray;
+    background: #E8E8E8;
+    padding: 10px;
+    border-radius: 5px;
+}
