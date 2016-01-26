@@ -84,7 +84,7 @@ var app = {
         });
         d3.select('#chats').selectAll('.message')
           .data(app.messages, function(d) {
-            return d.text;
+            return d.objectId;
           })
           .enter()
           .insert(function(message) {
