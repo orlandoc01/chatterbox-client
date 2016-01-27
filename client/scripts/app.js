@@ -15,7 +15,10 @@ var app = {
   processID: null,
 
   init: function() { 
+    $('.spinner').hide();
+
   	$('#send').on('submit', function(event) {
+      $('.spinner').fadeIn('fast');
       event.preventDefault();
       event.stopPropagation();
       app.handleSubmit();
@@ -30,8 +33,6 @@ var app = {
       else {
         $('.newRoom').hide();
         app.clearMessages();
-
-
       }
     });
 
@@ -55,6 +56,7 @@ var app = {
       contentType: 'application/JSON',
       success: function(data) {
         console.log("Message sent to chatterbox");
+        $('.spinner').fadeOut('fast');
       },
       error: function(data) {
         console.error("Failure: Message not sent.");
@@ -73,6 +75,7 @@ var app = {
       success: function(data) {
         app.data = data;
       	app.messages = data.results;
+
         data.results.forEach( function(messageObj) {
           var roomname = app.escape(messageObj.roomname);
           if(roomname !== undefined && !(roomname in app.rooms)) {
@@ -80,6 +83,7 @@ var app = {
             app.addRoom(roomname);
           }
         });
+
         var messagesD3 = d3.select('#chats').selectAll('.message')
           .data(app.messages, function(d) {
             return d.objectId;
@@ -103,7 +107,6 @@ var app = {
           .remove();
 
           setTimeout(app.fetch, 1000);
-
       },
       error: function(data) {
       	console.error("Failure: message not received");
@@ -154,7 +157,6 @@ var app = {
             $(element).toggleClass('selected');
           }
         });
-
 
       });
       $newFriend.hide();

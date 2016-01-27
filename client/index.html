@@ -17,8 +17,6 @@
   <body>
     <div id="main">
       <h1>chatterbox</h1>
-      <div class="spinner"><!--<img src="client/images/spiffygif_46x46.gif">--></div>
-
       <div id="rooms">
         Room:
         <select id="roomSelect">
@@ -35,6 +33,9 @@
       <form action="#" id="send" method="post">
         <input type="text" name="message" id="message"/>
         <input type="submit" name="submit" class="submit"/>
+        <div class="spinner">
+          <img src="images/spiffygif_46x46.gif" />
+        </div>
       </form>
       <div id="chats"></div>
     </div>
