@@ -1,12 +1,6 @@
 // YOUR CODE HERE:
 
-var example = {
-  username: "anonymous",
-  text: "testing123 testing123",
-  roomname: "lobby",
-  likes: ['orlando']
 
-};
 var app = {
   server: 'https://api.parse.com/1/classes/chatterbox',
   messages: [],
@@ -44,6 +38,7 @@ var app = {
         $('.newRoom').slideDown();
       }
       else {
+        app.unreadMessages = 0;
         $('.newRoom').hide();
         app.clearMessages();
       }
@@ -97,14 +92,14 @@ var app = {
           }
         });
 
+        d3.selectAll('.message').classed('unread',false);
         var messagesD3 = d3.select('#chats').selectAll('.message')
           .data(app.messages, function(d) {
             return d.objectId;
           });
 
         var newMessages = messagesD3.enter()
-        app.unreadMessages += newMessages.length;
-          newMessages.insert(function(message) {
+          .insert(function(message) {
             return app.createMessage(message);
           }, ":first-child")
           .attr("top", -60)
@@ -114,12 +109,13 @@ var app = {
           .attr("top", 0)
           .style("opacity", 1);
 
-          
+          var unread = $('.unread').length;
+          app.unreadMessages += unread;
           if(app.outOfFocus) {
             if(app.unreadMessages > 1) {
               document.title = app.unreadMessages + " New Messages!";
-            } else if (app.unreadMessages == 1) {
-              document.title = app.unreadMessages + " New Message!";
+            } else if(app.unreadMessages == 1) {
+              document.title = "1 New Message";
             }
           }
 
@@ -142,7 +138,7 @@ var app = {
   },
 
   createMessage: function(message) {
-  	var $message = $('<div class="message"></div>');
+  	var $message = $('<div class="message unread"></div>');
   	var $username = $('<span class="username"></span>');
   	$username.html('Created by <a href="#" class="handle">' + app.escape(message.username)
       + "</a> in " + app.escape(message.roomname) + ": ");
