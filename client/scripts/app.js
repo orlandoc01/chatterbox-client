@@ -12,9 +12,22 @@ var app = {
   messages: [],
   rooms: {},
   friends: {},
-  processID: null,
+  outOfFocus: false,
+  unreadMessages: 0,
 
   init: function() { 
+    $(window).blur( function() {
+      app.unreadMessages = 0;
+      app.outOfFocus = true;
+
+    });
+
+    $(window).focus( function() {
+      app.unreadMessages = 0;
+      app.outOfFocus = false;
+      document.title = "Chatterbox";
+    });
+
     $('.spinner').hide();
 
   	$('#send').on('submit', function(event) {
@@ -89,8 +102,9 @@ var app = {
             return d.objectId;
           });
 
-          messagesD3.enter()
-          .insert(function(message) {
+        var newMessages = messagesD3.enter()
+        app.unreadMessages += newMessages.length;
+          newMessages.insert(function(message) {
             return app.createMessage(message);
           }, ":first-child")
           .attr("top", -60)
@@ -99,6 +113,15 @@ var app = {
           .duration(1000)
           .attr("top", 0)
           .style("opacity", 1);
+
+          
+          if(app.outOfFocus) {
+            if(app.unreadMessages > 1) {
+              document.title = app.unreadMessages + " New Messages!";
+            } else if (app.unreadMessages == 1) {
+              document.title = app.unreadMessages + " New Message!";
+            }
+          }
 
           messagesD3.exit()
           .transition('linear')
@@ -193,7 +216,7 @@ var app = {
       else return char1;
     });
     return finalStr.join("");
-  },
+  }
 
 
 };
